@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>IQ Live — 24/7 Brain Challenge</title>
+<style>
+:root{--bg:#070b14;--panel:#101728;--panel2:#151f34;--text:#f5f7ff;--muted:#8d98b2;--accent:#7c5cff;--good:#35d07f;--bad:#ff5d73;--gold:#ffd166}*{box-sizing:border-box}html,body{margin:0;background:#000;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100%;overflow:hidden}body{display:grid;place-items:center}.stage{width:min(100vw,56.25vh);height:min(177.78vw,100vh);max-width:1080px;max-height:1920px;background:radial-gradient(circle at 50% 15%,#1c2850 0,#0a1020 36%,#05070d 100%);position:relative;overflow:hidden}.safe{position:absolute;inset:0;padding:32px 24px 26px;display:flex;flex-direction:column;gap:16px}.top{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;letter-spacing:.08em;font-size:14px}.live{background:#ff3158;border-radius:999px;padding:7px 11px;font-weight:900;font-size:11px}.counter{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}.progress{height:8px;background:#252d42;border-radius:99px;overflow:hidden}.progress>div{height:100%;width:100%;background:linear-gradient(90deg,var(--accent),#2de2e6);transform-origin:left}.eyebrow{text-transform:uppercase;letter-spacing:.14em;color:#9eabd0;font-size:11px;font-weight:800}.title{font-size:clamp(28px,7vw,58px);line-height:.98;font-weight:950;margin:0}.question{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px}.card{background:linear-gradient(180deg,rgba(20,30,53,.94),rgba(9,14,25,.96));border:1px solid #26314d;border-radius:24px;padding:20px;box-shadow:0 15px 60px rgba(0,0,0,.35)}.prompt{font-size:clamp(17px,4.3vw,34px);font-weight:850;line-height:1.25;text-align:center}.visual{margin:4px auto 0;width:min(100%,520px);aspect-ratio:1/1;display:grid;place-items:center}.sequence{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:520px}.cell{aspect-ratio:1;border-radius:14px;background:#18213a;border:1px solid #303b59;display:grid;place-items:center;font-size:clamp(22px,6vw,46px);font-weight:900}.shape{width:55%;height:55%;border-radius:50%;background:var(--accent)}.options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.opt{border:1px solid #2f3b5a;background:#111a2f;color:var(--text);border-radius:18px;padding:15px 10px;font-size:clamp(15px,4vw,25px);font-weight:850;cursor:pointer;min-height:62px}.opt:disabled{cursor:default}.timerWrap{display:flex;align-items:center;justify-content:center;gap:12px}.timer{font-variant-numeric:tabular-nums;font-size:clamp(28px,8vw,64px);font-weight:950;min-width:96px;text-align:center}.timerBar{height:10px;border-radius:99px;background:#273149;overflow:hidden;flex:1}.timerBar>div{height:100%;background:var(--good);width:100%;transform-origin:left}.answer{border-radius:18px;padding:14px 16px;text-align:center;background:#101b26;border:1px solid #2c5f49}.answer b{color:var(--good)}.explain{color:#c7d0e5;font-size:13px;line-height:1.45}.footer{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px}.score{color:var(--gold);font-weight:900}.results{position:absolute;inset:0;background:rgba(4,7,13,.96);display:none;place-items:center;padding:32px}.results.show{display:grid}.resultsCard{text-align:center;max-width:520px}.big{font-size:72px;font-weight:950}.btn{border:0;border-radius:16px;padding:14px 22px;background:var(--accent);color:white;font-weight:900;font-size:16px}.pulse{animation:pulse 1s infinite}@keyframes pulse{50%{transform:scale(1.04);opacity:.85}}@media(min-width:700px){.safe{padding:58px 44px 40px;gap:22px}.card{padding:28px}.explain{font-size:16px}}
+</style>
+</head>
+<body>
+<main class="stage" aria-label="24/7 vertical IQ live game">
+<div class="safe">
+<div class="top"><div class="brand">IQ LIVE</div><div><span class="live">● LIVE</span> <span class="counter" id="roundCounter">ROUND 1</span></div></div>
+<div class="progress"><div id="roundProgress"></div></div>
+<section class="question">
+<div class="eyebrow" id="gameType">NUMBER PATTERN</div>
+<h1 class="title" id="headline">Can you solve it?</h1>
+<div class="card">
+<div class="prompt" id="prompt"></div>
+<div class="visual" id="visual"></div>
+<div class="options" id="options"></div>
+</div>
+<div class="timerWrap"><div class="timer" id="timer">10</div><div class="timerBar"><div id="timerBar"></div></div></div>
+<div class="answer" id="answer" hidden></div>
+</section>
+<div class="footer"><span id="nextHint">Answer reveals automatically</span><span class="score">SCORE <span id="score">0</span></span></div>
+</div>
+<div class="results" id="results"><div class="resultsCard"><div class="eyebrow">SESSION COMPLETE</div><div class="big" id="finalScore">0</div><p id="finalText">Great run.</p><button class="btn" id="restart">START AGAIN</button></div></div>
+</main>
+<script>
+const games=[
+ {type:'NUMBER PATTERN',title:'Find the missing number',time:12,make(){const a=2+Math.floor(Math.random()*8),b=3+Math.floor(Math.random()*5),c=a+b,d=c+b,e=d+b,f=e+b;return {prompt:`${a}, ${b}, ${c}, ${d}, ${e}, ?`,choices:[f,f+1,f-1,f+2],answer:f,explain:`Each step adds ${b}. So ${e} + ${b} = ${f}.`}}},
+ {type:'ODD ONE OUT',title:'Which symbol breaks the pattern?',time:10,make(){const odd=Math.floor(Math.random()*4),vals=['▲','▲','▲','▲'];vals[odd]='◆';return {prompt:'Pick the different symbol.',visual:vals.map((v,i)=>`<div class="cell" data-i="${i}">${v}</div>`).join(''),choices:['1','2','3','4'],answer:odd,explain:`Only option ${odd+1} is a diamond; the others are triangles.`}}},
+ {type:'SEQUENCE',title:'What comes next?',time:12,make(){const start=1+Math.floor(Math.random()*4),step=2+Math.floor(Math.random()*3),arr=[0,1,2,3,4].map(i=>start+i*step),ans=arr[4]+step;return {prompt:arr.slice(0,4).join('  •  ')+'  •  ?',choices:[ans,ans+step,ans-1,ans+2],answer:ans,explain:`The sequence increases by ${step} each time.`}}},
+ {type:'MEMORY',title:'Remember the pattern',time:8,make(){const n=3+Math.floor(Math.random()*3),seq=Array.from({length:n},()=>Math.floor(Math.random()*9)+1),answer=seq[seq.length-1];return {prompt:'Memorize this. The last digit disappears.',visual:`<div class="prompt" style="font-size:clamp(38px,10vw,80px);letter-spacing:.14em">${seq.join(' ')}</div>`,choices:[answer,((answer+1)%9)+1,((answer+3)%9)+1,((answer+5)%9)+1],answer,explain:`The hidden final number was ${answer}.`}}},
+ {type:'WORD LOGIC',title:'Which word does not belong?',time:10,make(){const answer=2;return {prompt:'APPLE  •  BANANA  •  CARROT  •  MANGO',choices:['APPLE','BANANA','CARROT','MANGO'],answer,explain:'CARROT is the only vegetable; the others are fruits.'}}},
+ {type:'MATH TRAP',title:'Beat the timer',time:10,make(){const a=3+Math.floor(Math.random()*7),b=2+Math.floor(Math.random()*6),ans=a*b;return {prompt:`${a} × ${b} + ${a} = ?`,choices:[ans+a,ans,ans+b,ans-a],answer:ans+a,explain:`Multiply first: ${a} × ${b} = ${ans}. Then add ${a} → ${ans+a}.`}}}
+];
+let round=0,score=0,current=null,left=0,tick=null,locked=false;
+const $=id=>document.getElementById(id);
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function render(){locked=false;$('answer').hidden=true;current=games[round%games.length];const q=current.make();current.q=q;left=current.time;$('gameType').textContent=current.type;$('headline').textContent=current.title;$('prompt').textContent=q.prompt||'';$('visual').innerHTML=q.visual||'';$('options').innerHTML='';
+shuffle(q.choices).forEach((c,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=c;b.onclick=()=>choose(c);b.dataset.value=c;$('options').appendChild(b)});
+$('roundCounter').textContent=`ROUND ${round+1}`;$('score').textContent=score;$('nextHint').textContent='Answer reveals automatically';updateTimer();clearInterval(tick);tick=setInterval(()=>{left--;updateTimer();if(left<=0){clearInterval(tick);reveal(null)}},1000);
+}
+function updateTimer(){ $('timer').textContent=Math.max(0,left); $('timerBar').style.transform=`scaleX(${Math.max(0,left/current.time)})`; if(left<=3)$('timer').classList.add('pulse'); else $('timer').classList.remove('pulse'); }
+function choose(v){if(locked)return;locked=true;clearInterval(tick);reveal(v)}
+function reveal(v){locked=true;const q=current.q,correct=Number(v)===Number(q.answer)||String(v)===String(q.answer);if(correct)score++;document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(String(b.dataset.value)===String(q.answer))b.style.outline='3px solid var(--good)';});$('answer').hidden=false;$('answer').innerHTML=correct?`✅ <b>Correct!</b><div class="explain">${q.explain}</div>`:`❌ <b>Answer: ${q.answer}</b><div class="explain">${q.explain}</div>`;$('score').textContent=score;$('nextHint').textContent='Next challenge loading…';setTimeout(next,3500)}
+function next(){round++;if(round%20===0){showResults();return}render()}
+function showResults(){$('finalScore').textContent=`${score} / ${round}`;$('finalText').textContent=score>=round*.8?'Genius run.':'Keep playing — the next set could be your best yet.';$('results').classList.add('show')}
+$('restart').onclick=()=>{$('results').classList.remove('show');round=0;score=0;render()};
+render();
+</script>
+</body></html>
