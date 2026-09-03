@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>IQ LIVE — Visual Comment Quiz</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#050505}body{overflow:hidden}.stage{width:100vw;height:100vh;display:grid;place-items:center;background:#fff}.page{width:min(100vw,56.25vh);height:100vh;max-height:177.78vw;position:relative;overflow:hidden;background:#fff}.top{height:13%;display:flex;align-items:center;justify-content:center;position:relative}.test{font-size:clamp(18px,4vw,42px);font-weight:900;letter-spacing:.03em}.live{position:absolute;right:4%;top:24%;font-size:clamp(11px,2.4vw,23px);font-weight:900;color:#fff;background:#e51d2a;padding:.35em .7em;border-radius:999px}.live:before{content:'';display:inline-block;width:.5em;height:.5em;background:#fff;border-radius:50%;margin-right:.35em}.headline{height:14%;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 5%}.headline h1{margin:0;font-size:clamp(25px,7vw,70px);line-height:.98;font-weight:1000}.comment{position:absolute;left:5%;right:5%;bottom:3.2%;text-align:center;background:#111;color:#fff;border-radius:999px;padding:1.2% 2%;font-size:clamp(11px,2.5vw,25px);font-weight:900;letter-spacing:.02em}.board{height:67%;margin:0 4.5%;display:flex;flex-direction:column;justify-content:center}.equations{display:flex;flex-direction:column;gap:3.4%;width:100%}.eq{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;min-height:21%;font-size:clamp(30px,9vw,92px);font-weight:1000}.eq .left{text-align:right;padding-right:4%}.eq .op{text-align:center;font-size:.75em}.eq .right{text-align:left;padding-left:4%}.eq .result{font-size:1.02em}.final{margin-top:2%;font-size:clamp(36px,11vw,112px);font-weight:1000;text-align:center}.choices{display:grid;grid-template-columns:1fr 1fr;gap:2.5%;margin:3.5% 3% 0}.choice{border:4px solid #111;border-radius:18px;background:#fff;min-height:7.8vh;font-size:clamp(20px,5.5vw,56px);font-weight:1000;display:flex;align-items:center;justify-content:center;gap:.25em}.choice span{font-size:.55em}.choice.correct{background:#111;color:#fff}.choice.wrong{opacity:.28}.reveal{position:absolute;inset:0;background:rgba(255,255,255,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8%;opacity:0;pointer-events:none;transition:opacity .3s}.reveal.show{opacity:1}.reveal .small{font-size:clamp(14px,3vw,30px);font-weight:900;letter-spacing:.12em}.reveal .answer{font-size:clamp(70px,22vw,220px);line-height:1;font-weight:1000;margin:2% 0}.reveal .why{font-size:clamp(14px,3.4vw,34px);font-weight:800;max-width:90%}.reveal .next{margin-top:5%;font-size:clamp(12px,2.5vw,25px);font-weight:900}.controls{position:absolute;left:3%;top:2%;display:flex;gap:6px;z-index:10}.ctrl{border:2px solid #111;background:#fff;border-radius:10px;padding:5px 8px;font-weight:900;font-size:11px;cursor:pointer}.progress{position:absolute;left:0;right:0;bottom:0;height:5px;background:#eee}.progress i{display:block;height:100%;width:0;background:#111}.mode{position:absolute;left:3%;bottom:1.2%;font-size:9px;font-weight:900;color:#777}@media(min-width:800px){.page{border-left:1px solid #ddd;border-right:1px solid #ddd}.controls{display:flex}}@media(max-width:500px){.controls{display:none}.eq{font-size:clamp(28px,8.7vw,48px)}.choices{gap:2%;margin-top:3%}.choice{border-width:3px;border-radius:13px}.headline{height:12%}.board{height:69%}}
+</style>
+</head>
+<body>
+<div class="stage"><main class="page" id="page">
+<div class="controls"><button class="ctrl" id="prev">←</button><button class="ctrl" id="nextBtn">NEXT →</button><button class="ctrl" id="fs">FULLSCREEN</button></div>
+<header class="top"><div class="test" id="test">TEST 1</div><div class="live">LIVE</div></header>
+<section class="headline"><h1 id="title">CAN YOU SOLVE THIS?</h1></section>
+<section class="board">
+<div class="equations" id="equations"></div>
+<div class="final" id="final">? =</div>
+<div class="choices" id="choices"></div>
+</section>
+<div class="comment">💬 COMMENT A, B, C OR D</div>
+<div class="mode">SPACE / ENTER = NEXT • R = REVEAL</div>
+<div class="progress"><i id="progress"></i></div>
+<div class="reveal" id="reveal"><div class="small">CORRECT ANSWER</div><div class="answer" id="answer"></div><div class="why" id="why"></div><div class="next">NEXT PUZZLE COMING...</div></div>
+</main></div>
+<script>
+'use strict';
+const puzzles=[
+ {title:'CAN YOU SOLVE THIS?',lines:[['🦁','+','🦓','=','14'],['🦁','−','🦓','=','8']],final:'🦁 × 🦓 = ?',answer:'33',options:['24','33','42','56'],why:'🦁 = 11 and 🦓 = 3 → 11 × 3 = 33'},
+ {title:'THINK CAREFULLY!',lines:[['🍎','+','🍌','=','11'],['🍎','−','🍌','=','3']],final:'🍎 × 🍌 = ?',answer:'28',options:['21','24','28','32'],why:'🍎 = 7 and 🍌 = 4 → 7 × 4 = 28'},
+ {title:'CAN YOU CRACK IT?',lines:[['🚀','+','🪐','=','20'],['🚀','−','🪐','=','4']],final:'🚀 × 🪐 = ?',answer:'96',options:['80','96','104','120'],why:'🚀 = 12 and 🪐 = 8 → 12 × 8 = 96'},
+ {title:'FIND THE VALUE!',lines:[['🔵','+','🔺','=','15'],['🔵','−','🔺','=','5']],final:'🔵 × 🔺 = ?',answer:'50',options:['40','45','50','60'],why:'🔵 = 10 and 🔺 = 5 → 10 × 5 = 50'},
+ {title:'NO CALCULATOR!',lines:[['🚗','+','🚌','=','17'],['🚗','−','🚌','=','3']],final:'🚗 × 🚌 = ?',answer:'70',options:['60','70','75','80'],why:'🚗 = 10 and 🚌 = 7 → 10 × 7 = 70'},
+ {title:'BE CAREFUL!',lines:[['👾','+','👹','=','14'],['👾','−','👹','=','2']],final:'👾 × 👹 = ?',answer:'48',options:['36','42','48','56'],why:'👾 = 8 and 👹 = 6 → 8 × 6 = 48'},
+ {title:'EASY OR TRICKY?',lines:[['🐯','+','🐘','=','13'],['🐯','−','🐘','=','5']],final:'🐯 × 🐘 = ?',answer:'36',options:['24','30','36','40'],why:'🐯 = 9 and 🐘 = 4 → 9 × 4 = 36'},
+ {title:'ONLY 1 ANSWER!',lines:[['⭐','+','🌙','=','16'],['⭐','−','🌙','=','6']],final:'⭐ × 🌙 = ?',answer:'55',options:['45','50','55','60'],why:'⭐ = 11 and 🌙 = 5 → 11 × 5 = 55'},
+ {title:'BRAIN POWER!',lines:[['🐼','+','🦊','=','18'],['🐼','−','🦊','=','6']],final:'🐼 × 🦊 = ?',answer:'72',options:['60','66','72','84'],why:'🐼 = 12 and 🦊 = 6 → 12 × 6 = 72'},
+ {title:'CAN YOU GET IT?',lines:[['🍕','+','🍔','=','19'],['🍕','−','🍔','=','5']],final:'🍕 × 🍔 = ?',answer:'84',options:['70','78','84','90'],why:'🍕 = 12 and 🍔 = 7 → 12 × 7 = 84'},
+ {title:'IQ CHALLENGE!',lines:[['🐸','+','🐵','=','15'],['🐸','−','🐵','=','1']],final:'🐸 × 🐵 = ?',answer:'56',options:['49','54','56','64'],why:'🐸 = 8 and 🐵 = 7 → 8 × 7 = 56'},
+ {title:'FINAL TEST!',lines:[['⚽','+','🏀','=','17'],['⚽','−','🏀','=','7']],final:'⚽ × 🏀 = ?',answer:'60',options:['50','55','60','70'],why:'⚽ = 12 and 🏀 = 5 → 12 × 5 = 60'}
+];
+let index=0,revealed=false,auto;
+const $=id=>document.getElementById(id);
+function render(){const p=puzzles[index];revealed=false;$('reveal').classList.remove('show');$('test').textContent='TEST '+(index+1);$('title').textContent=p.title;$('equations').innerHTML=p.lines.map(r=>`<div class="eq"><div class="left">${r[0]} ${r[1]} ${r[2]}</div><div class="op">${r[3]}</div><div class="right result">${r[4]}</div></div>`).join('');$('final').textContent=p.final;$('choices').innerHTML=p.options.map((v,i)=>`<div class="choice" data-value="${v}"><span>${'ABCD'[i]}</span>${v}</div>`).join('');$('progress').style.transition='none';$('progress').style.width='0%';requestAnimationFrame(()=>{$('progress').style.transition='width 12s linear';$('progress').style.width='100%'});clearTimeout(auto);auto=setTimeout(reveal,12000)}
+function reveal(){if(revealed)return;revealed=true;const p=puzzles[index];document.querySelectorAll('.choice').forEach(x=>{x.classList.toggle('correct',x.dataset.value===p.answer);x.classList.toggle('wrong',x.dataset.value!==p.answer)});$('answer').textContent=p.answer;$('why').textContent=p.why;$('reveal').classList.add('show');clearTimeout(auto);auto=setTimeout(next,5000)}
+function next(){index=(index+1)%puzzles.length;render()}
+function prev(){index=(index-1+puzzles.length)%puzzles.length;render()}
+$('nextBtn').onclick=next;$('prev').onclick=prev;$('fs').onclick=()=>document.documentElement.requestFullscreen?.();
+document.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Enter'){e.preventDefault();next()}if(e.key.toLowerCase()==='r')reveal();if(e.key==='ArrowLeft')prev();if(e.key==='ArrowRight')next()});
+render();
+</script>
+</body></html>
