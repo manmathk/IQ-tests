@@ -13,11 +13,7 @@
 <div class="controls"><button class="ctrl" id="prev">←</button><button class="ctrl" id="nextBtn">NEXT →</button><button class="ctrl" id="fs">FULLSCREEN</button></div>
 <header class="top"><div class="test" id="test">TEST 1</div><div class="live">LIVE</div></header>
 <section class="headline"><h1 id="title">CAN YOU SOLVE THIS?</h1></section>
-<section class="board">
-<div class="equations" id="equations"></div>
-<div class="final" id="final">? =</div>
-<div class="choices" id="choices"></div>
-</section>
+<section class="board"><div class="equations" id="equations"></div><div class="final" id="final">? =</div><div class="choices" id="choices"></div></section>
 <div class="comment">💬 COMMENT A, B, C OR D</div>
 <div class="mode">SPACE / ENTER = NEXT • R = REVEAL</div>
 <div class="progress"><i id="progress"></i></div>
@@ -25,6 +21,8 @@
 </main></div>
 <script>
 'use strict';
+const PUZZLE_TIME=90000;
+const REVEAL_TIME=5000;
 const puzzles=[
  {title:'CAN YOU SOLVE THIS?',lines:[['🦁','+','🦓','=','14'],['🦁','−','🦓','=','8']],final:'🦁 × 🦓 = ?',answer:'33',options:['24','33','42','56'],why:'🦁 = 11 and 🦓 = 3 → 11 × 3 = 33'},
  {title:'THINK CAREFULLY!',lines:[['🍎','+','🍌','=','11'],['🍎','−','🍌','=','3']],final:'🍎 × 🍌 = ?',answer:'28',options:['21','24','28','32'],why:'🍎 = 7 and 🍌 = 4 → 7 × 4 = 28'},
@@ -41,12 +39,20 @@ const puzzles=[
 ];
 let index=0,revealed=false,auto;
 const $=id=>document.getElementById(id);
-function render(){const p=puzzles[index];revealed=false;$('reveal').classList.remove('show');$('test').textContent='TEST '+(index+1);$('title').textContent=p.title;$('equations').innerHTML=p.lines.map(r=>`<div class="eq"><div class="left">${r[0]} ${r[1]} ${r[2]}</div><div class="op">${r[3]}</div><div class="right result">${r[4]}</div></div>`).join('');$('final').textContent=p.final;$('choices').innerHTML=p.options.map((v,i)=>`<div class="choice" data-value="${v}"><span>${'ABCD'[i]}</span>${v}</div>`).join('');$('progress').style.transition='none';$('progress').style.width='0%';requestAnimationFrame(()=>{$('progress').style.transition='width 12s linear';$('progress').style.width='100%'});clearTimeout(auto);auto=setTimeout(reveal,12000)}
-function reveal(){if(revealed)return;revealed=true;const p=puzzles[index];document.querySelectorAll('.choice').forEach(x=>{x.classList.toggle('correct',x.dataset.value===p.answer);x.classList.toggle('wrong',x.dataset.value!==p.answer)});$('answer').textContent=p.answer;$('why').textContent=p.why;$('reveal').classList.add('show');clearTimeout(auto);auto=setTimeout(next,5000)}
+function render(){
+ const p=puzzles[index]; revealed=false; $('reveal').classList.remove('show'); $('test').textContent='TEST '+(index+1); $('title').textContent=p.title;
+ $('equations').innerHTML=p.lines.map(r=>`<div class="eq"><div class="left">${r[0]} ${r[1]} ${r[2]}</div><div class="op">${r[3]}</div><div class="right result">${r[4]}</div></div>`).join('');
+ $('final').textContent=p.final; $('choices').innerHTML=p.options.map((v,i)=>`<div class="choice" data-value="${v}"><span>${'ABCD'[i]}</span>${v}</div>`).join('');
+ $('progress').style.transition='none'; $('progress').style.width='0%';
+ requestAnimationFrame(()=>{$('progress').style.transition=`width ${PUZZLE_TIME/1000}s linear`; $('progress').style.width='100%'});
+ clearTimeout(auto); auto=setTimeout(reveal,PUZZLE_TIME);
+}
+function reveal(){if(revealed)return; revealed=true; const p=puzzles[index]; document.querySelectorAll('.choice').forEach(x=>{x.classList.toggle('correct',x.dataset.value===p.answer);x.classList.toggle('wrong',x.dataset.value!==p.answer)}); $('answer').textContent=p.answer; $('why').textContent=p.why; $('reveal').classList.add('show'); clearTimeout(auto); auto=setTimeout(next,REVEAL_TIME)}
 function next(){index=(index+1)%puzzles.length;render()}
 function prev(){index=(index-1+puzzles.length)%puzzles.length;render()}
-$('nextBtn').onclick=next;$('prev').onclick=prev;$('fs').onclick=()=>document.documentElement.requestFullscreen?.();
+$('nextBtn').onclick=next; $('prev').onclick=prev; $('fs').onclick=()=>document.documentElement.requestFullscreen?.();
 document.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Enter'){e.preventDefault();next()}if(e.key.toLowerCase()==='r')reveal();if(e.key==='ArrowLeft')prev();if(e.key==='ArrowRight')next()});
 render();
 </script>
-</body></html>
+</body>
+</html>
